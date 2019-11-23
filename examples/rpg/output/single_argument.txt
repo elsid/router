@@ -1,0 +1,7 @@
+"eat apple" apple is eaten
+"cast frostbolt" frostbolt is casted
+"eat orange" orange is eaten
+"cast fireball" fireball is casted
+"equip pine_branch" failed: Invalid action: equip
+"eat" failed: Not enough input
+"cast frostbolt Sauron" frostbolt is casted

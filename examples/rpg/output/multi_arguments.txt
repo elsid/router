@@ -1,0 +1,20 @@
+"roll_dice" dice show 1
+"wizards" failed: Invalid input
+"wizards add" failed: Invalid input
+"wizards add Gendalf" failed: Invalid input
+"wizards add Gendalf 100" wizard Gendalf is added
+"wizards add Gendalf 100" wizard Gendalf already exists
+"spells add frostbolt" failed: Invalid input
+"spells add frostbolt" failed: Invalid input
+"spells add frostbolt 60" spell frostbolt is added
+"spells remove frostbolt" failed: Invalid input
+"wizards cast Gendalf frostbolt" wizard Gendalf doesn't know spell frostbolt
+"wizards learn Gendalf fireball" spell fireball is not found
+"wizards learn Gendalf frostbolt" wizard Gendalf has learned spell frostbolt
+"wizards cast Gendalf fireball" spell fireball is not found
+"wizards cast Gendalf frostbolt" spell frostbolt is casted by wizard Gendalf
+"wizards cast Gendalf frostbolt" wizard Gendalf doesn't have enough mana to cast frostbolt
+"wizards mana Gendalf" wizard Gendalf has 40 mana
+"spells cost frostbolt" spell frostbolt costs 60 mana
+"wizards channel Gendalf 20" wizard Gendalf is channeled by 20 mana
+"wizards cast Gendalf frostbolt" spell frostbolt is casted by wizard Gendalf

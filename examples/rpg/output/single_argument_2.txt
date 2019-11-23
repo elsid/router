@@ -1,0 +1,13 @@
+"equip pine_branch" pine_branch is equiped
+"wear green_linen_robe" green_linen_robe is weared
+"read old_dusty_scroll" old_dusty_scroll is read
+"eat apple" apple is eaten
+"drink water" water is drank
+"enchant pine_branch" pine_branch is enchanted
+"cast frostbolt" frostbolt is casted
+"eat orange" orange is eaten
+"cast fireball" fireball is casted
+"pick loot" failed: Invalid action: pick
+"buff intellect Gendalf" failed: Invalid action: buff
+"eat" failed: Not enough input
+"cast frostbolt Sauron" frostbolt is casted

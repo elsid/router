@@ -1,0 +1,20 @@
+roll_dice
+wizards
+wizards add
+wizards add Gendalf
+wizards add Gendalf 100
+wizards add Gendalf 100
+spells add frostbolt
+spells add frostbolt
+spells add frostbolt 60
+spells remove frostbolt
+wizards cast Gendalf frostbolt
+wizards learn Gendalf fireball
+wizards learn Gendalf frostbolt
+wizards cast Gendalf fireball
+wizards cast Gendalf frostbolt
+wizards cast Gendalf frostbolt
+wizards mana Gendalf
+spells cost frostbolt
+wizards channel Gendalf 20
+wizards cast Gendalf frostbolt

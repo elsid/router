@@ -1,0 +1,13 @@
+equip pine_branch
+wear green_linen_robe
+read old_dusty_scroll
+eat apple
+drink water
+enchant pine_branch
+cast frostbolt
+eat orange
+cast fireball
+pick loot
+buff intellect Gendalf
+eat
+cast frostbolt Sauron

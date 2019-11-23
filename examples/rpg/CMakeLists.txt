@@ -1,0 +1,51 @@
+add_executable(if_then_example if_then.cpp)
+target_compile_options(if_then_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(if_then_example PRIVATE cxx_std_20)
+
+add_executable(if_then_2_example if_then_2.cpp)
+target_compile_options(if_then_2_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(if_then_2_example PRIVATE cxx_std_20)
+
+add_executable(if_then_arguments_example if_then_arguments.cpp)
+target_compile_options(if_then_arguments_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(if_then_arguments_example PRIVATE cxx_std_20)
+
+add_executable(virtual_example virtual.cpp)
+target_compile_options(virtual_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(virtual_example PRIVATE cxx_std_20)
+
+add_executable(virtual_arguments_example virtual_arguments.cpp)
+target_compile_options(virtual_arguments_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(virtual_arguments_example PRIVATE cxx_std_20)
+
+add_executable(virtual_arguments_state_example virtual_arguments_state.cpp)
+target_compile_options(virtual_arguments_state_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(virtual_arguments_state_example PRIVATE cxx_std_20)
+
+add_executable(meta_example meta.cpp)
+target_compile_options(meta_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_example meta_2.cpp)
+target_compile_options(meta_2_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_implicit_conversion_example meta_2_implicit_conversion.cpp)
+target_compile_options(meta_2_implicit_conversion_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_implicit_conversion_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_implicit_conversion_and_runtime_name_example meta_2_implicit_conversion_and_runtime_name.cpp)
+target_compile_options(meta_2_implicit_conversion_and_runtime_name_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_implicit_conversion_and_runtime_name_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_implicit_conversion_and_return_example meta_2_implicit_conversion_and_return.cpp)
+target_compile_options(meta_2_implicit_conversion_and_return_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_implicit_conversion_and_return_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_implicit_conversion_and_return_and_explicit_argument_example meta_2_implicit_conversion_and_return_and_explicit_argument.cpp)
+target_compile_options(meta_2_implicit_conversion_and_return_and_explicit_argument_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_implicit_conversion_and_return_and_explicit_argument_example PRIVATE cxx_std_20)
+
+add_executable(meta_2_implicit_conversion_and_return_and_explicit_argument_and_state_example meta_2_implicit_conversion_and_return_and_explicit_argument_and_state.cpp)
+target_compile_options(meta_2_implicit_conversion_and_return_and_explicit_argument_and_state_example PRIVATE -Wall -Wextra -Wsign-compare -pedantic -Werror)
+target_compile_features(meta_2_implicit_conversion_and_return_and_explicit_argument_and_state_example PRIVATE cxx_std_20)

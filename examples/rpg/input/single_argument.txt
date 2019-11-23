@@ -1,0 +1,7 @@
+eat apple
+cast frostbolt
+eat orange
+cast fireball
+equip pine_branch
+eat
+cast frostbolt Sauron
