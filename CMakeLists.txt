@@ -6,6 +6,8 @@ option(ROUTER_BUILD_EXAMPLES "Enable examples build" OFF)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_subdirectory(contrib)
+
 add_library(router INTERFACE)
 
 target_compile_features(router INTERFACE cxx_std_20)
@@ -14,6 +16,8 @@ target_include_directories(router INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
+
+target_link_libraries(router INTERFACE tl::expected)
 
 add_library(elsid::router ALIAS router)
 

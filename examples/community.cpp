@@ -81,6 +81,7 @@ using model::RoomId;
 
 using router::Selector;
 using router::Action;
+using router::Errc;
 
 struct Tag {
     using value_type = std::string_view;
@@ -115,6 +116,11 @@ constexpr struct TalksTag : Tag {
 } talks_tag;
 
 struct Serialize {
+    template <class ... T>
+    void operator ()(const std::variant<T ...>& v) const {
+        std::visit(*this, v);
+    }
+
     void operator ()(std::monostate) const {}
 
     void operator ()(std::optional<Speaker>) const {}
@@ -126,6 +132,24 @@ struct Serialize {
     void operator ()(std::vector<Talk>) const {}
 
     void operator ()(std::vector<Speaker>) const {}
+};
+
+struct PrintError {
+    void operator ()(Errc value) const {
+        switch (value) {
+            case Errc::None:
+                break;
+            case Errc::TooManyArguments:
+                std::cout << "Too many arguments" << std::endl;
+                break;
+            case Errc::NotEnoughInput:
+                std::cout << "Not enough input" << std::endl;
+                break;
+            case Errc::InvalidAction:
+                std::cout << "Invalid action" << std::endl;
+                break;
+        }
+    }
 };
 
 struct Request {
@@ -198,24 +222,29 @@ auto dispatch(Community& community, const Request& request) {
 int main() {
     model::Community community;
     Request request;
-    try {
-        request.method = "GET";
-        request.uri = {"conferences", "cppnow2020", "speakers", "326"};
-        std::visit(Serialize {}, dispatch(community, request));
-        request.method = "POST";
-        request.uri = {"conferences", "cppnow2020", "rooms"};
-        std::visit(Serialize {}, dispatch(community, request));
-        request.method = "DELETE";
-        request.uri = {"conferences", "cppnow2020", "talks", "473"};
-        std::visit(Serialize {}, dispatch(community, request));
-        request.method = "GET";
-        request.uri = {"conferences", "cppnow2020", "rooms", "3", "talks"};
-        std::visit(Serialize {}, dispatch(community, request));
-        request.method = "GET";
-        request.uri = {"conferences", "cppnow2020", "rooms", "5", "speakers"};
-        std::visit(Serialize {}, dispatch(community, request));
-    } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
+    request.method = "GET";
+    request.uri = {"conferences", "cppnow2020", "speakers", "326"};
+    if (!dispatch(community, request).map(Serialize {}).map_error(PrintError {}).has_value()) {
+        return -1;
+    }
+    request.method = "POST";
+    request.uri = {"conferences", "cppnow2020", "rooms"};
+    if (!dispatch(community, request).map(Serialize {}).map_error(PrintError {}).has_value()) {
+        return -1;
+    }
+    request.method = "DELETE";
+    request.uri = {"conferences", "cppnow2020", "talks", "473"};
+    if (!dispatch(community, request).map(Serialize {}).map_error(PrintError {}).has_value()) {
+        return -1;
+    }
+    request.method = "GET";
+    request.uri = {"conferences", "cppnow2020", "rooms", "3", "talks"};
+    if (!dispatch(community, request).map(Serialize {}).map_error(PrintError {}).has_value()) {
+        return -1;
+    }
+    request.method = "GET";
+    request.uri = {"conferences", "cppnow2020", "rooms", "5", "speakers"};
+    if (!dispatch(community, request).map(Serialize {}).map_error(PrintError {}).has_value()) {
         return -1;
     }
     return 0;

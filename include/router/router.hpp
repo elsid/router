@@ -8,6 +8,8 @@
 #include <type_traits>
 #include <variant>
 
+#include <tl/expected.hpp>
+
 namespace router {
 
 template <class Tag, class F>
@@ -129,20 +131,67 @@ inline auto consume(std::ranges::input_range auto input) {
     return std::ranges::subrange(std::next(std::begin(input)), std::end(input));
 }
 
+enum class Errc {
+    None,
+    TooManyArguments,
+    NotEnoughInput,
+    InvalidAction,
+};
+
+template <class T>
+using Result = tl::expected<T, Errc>;
+
+template <class T>
+struct ResultValue {
+    using type = T;
+};
+
+template <class T>
+struct ResultValue<Result<T>> {
+    using type = typename ResultValue<T>::type;
+};
+
+template <class T>
+using result_value_t = typename ResultValue<T>::type;
+
+template <class ReturnType>
+struct MakeResult {
+    template <class T>
+    ReturnType operator ()(Result<T>&& value) const {
+        return std::move(value).and_then(*this);
+    }
+
+    template <class ... Ts>
+    ReturnType operator ()(std::variant<Ts ...>&& value) const {
+        return std::visit(
+            [] (auto&& v) { return ReturnType(std::move(v)); },
+            std::move(value)
+        );
+    }
+
+    template <class T>
+    ReturnType operator ()(T&& value) const {
+        return std::forward<T>(value);
+    }
+};
+
 template <class Action, std::ranges::input_range Range, class ... Args>
 inline auto invoke(const Action& action, Range input, Args&& ... args) {
     if constexpr (std::is_invocable_v<Action, Range, Args&& ...>) {
-        return action(input, std::forward<Args>(args) ...);
+        using Value = decltype(action(input, std::forward<Args>(args) ...));
+        return Result<Value>(action(input, std::forward<Args>(args) ...));
     } else if constexpr (sizeof ... (Args) >= arguments_number_v<Action>) {
+        using Value = decltype(action(std::forward<Args>(args) ...));
         if (!std::empty(input)) {
-            throw std::runtime_error("Too many arguments");
+            return Result<Value>(tl::make_unexpected(Errc::TooManyArguments));
         }
-        return action(std::forward<Args>(args) ...);
+        return Result<Value>(action(std::forward<Args>(args) ...));
     } else {
+        using Value = decltype(invoke(action, consume(input), std::forward<Args>(args) ..., *std::begin(input)));
         if (std::empty(input)) {
-            throw std::runtime_error("Not enough input");
+            return Result<Value>(tl::make_unexpected(Errc::NotEnoughInput));
         }
-        return invoke(action, consume(input), std::forward<Args>(args) ..., *std::begin(input));
+        return Result<Value>(invoke(action, consume(input), std::forward<Args>(args) ..., *std::begin(input)));
     }
 }
 
@@ -157,7 +206,9 @@ inline constexpr bool has_name_v = HasName<T>::value;
 
 template <class ... Actions>
 struct Selector {
-    using return_type = distinct_t<return_type_t<Actions> ...>;
+    using return_type = Result<distinct_t<result_value_t<return_type_t<Actions>> ...>>;
+
+    static constexpr MakeResult<return_type> make_result {};
 
     const std::tuple<Actions ...> actions;
 
@@ -167,7 +218,7 @@ struct Selector {
     template <class ... Args>
     return_type operator ()(std::ranges::input_range auto input, Args&& ... args) const {
         if (std::empty(input)) {
-            throw std::runtime_error("Not enough input");
+            return tl::make_unexpected(Errc::NotEnoughInput);
         }
         return find_action(input, [&] (std::ranges::input_range auto input, const auto& action) {
             return invoke(action, input, std::forward<Args>(args) ...);
@@ -177,7 +228,7 @@ struct Selector {
     template <std::size_t i = 0, class F>
     return_type find_action(std::ranges::input_range auto input, F&& f) const {
         if constexpr (i >= std::tuple_size_v<decltype(actions)>) {
-            throw std::runtime_error("Invalid action: " + std::string(*std::begin(input)));
+            return tl::make_unexpected(Errc::InvalidAction);
         } else if constexpr (has_name_v<std::tuple_element_t<i, decltype(actions)>>) {
             if (std::get<i>(actions).name == *std::begin(input)) {
                 return make_result(f(consume(input), std::get<i>(actions)));
@@ -186,19 +237,6 @@ struct Selector {
         } else {
             return make_result(f(input, std::get<i>(actions)));
         }
-    }
-
-    template <class ... Ts>
-    static auto make_result(std::variant<Ts ...>&& value) {
-        return std::visit(
-            [] (auto&& v) { return return_type(std::move(v)); },
-            std::move(value)
-        );
-    }
-
-    template <class T>
-    static auto make_result(T&& value) {
-        return return_type(std::forward<T>(value));
     }
 };
 
@@ -218,9 +256,10 @@ struct Argument {
     constexpr explicit Argument(F&& ... f) : selector(std::forward<F>(f) ...) {}
 
     template <class ... Args>
-    auto operator ()(std::ranges::input_range auto input, Args&& ... args) const {
+    auto operator ()(std::ranges::input_range auto input, Args&& ... args) const
+        -> typename Selector<Actions ...>::return_type {
         if (std::empty(input)) {
-            throw std::runtime_error("Not enough input");
+            return tl::make_unexpected(Errc::NotEnoughInput);
         }
         return selector(consume(input), std::forward<Args>(args) ..., T {*std::begin(input)});
     }

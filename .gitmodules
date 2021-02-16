@@ -1,0 +1,6 @@
+[submodule "contrib/function_ref"]
+	path = contrib/function_ref
+	url = git@github.com:TartanLlama/function_ref.git
+[submodule "contrib/expected"]
+	path = contrib/expected
+	url = git@github.com:TartanLlama/expected.git
